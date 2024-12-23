@@ -21,10 +21,6 @@ const fetchUsers = async () => {
     });
 };
 
-// Call the function on page load
-window.onload = fetchUsers;
-
-
 // Edit User
 const editUser = async (userId) => {
     const updatedUser = {
@@ -48,7 +44,6 @@ const editUser = async (userId) => {
     fetchUsers(); // Reload users after update
 };
 
-
 // Delete User
 const deleteUser = async (userId) => {
     const response = await fetch(`https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users/${userId}`, {
@@ -60,8 +55,7 @@ const deleteUser = async (userId) => {
     fetchUsers(); // Reload users after deletion
 };
 
-
-
+// Fetch Patients and display
 const fetchPatients = async () => {
     const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/patients');
     const data = await response.json();
@@ -85,10 +79,7 @@ const fetchPatients = async () => {
     });
 };
 
-// Call the function on page load
-window.onload = fetchPatients;
-
-
+// Add Patient
 const addPatient = async (patientData) => {
     const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/patients', {
         method: 'POST',
@@ -105,8 +96,7 @@ const addPatient = async (patientData) => {
     fetchPatients(); // Reload patients after addition
 };
 
-
-
+// Delete Patient
 const deletePatient = async (patientId) => {
     const response = await fetch(`https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/patients/${patientId}`, {
         method: 'DELETE',
@@ -117,5 +107,8 @@ const deletePatient = async (patientId) => {
     fetchPatients(); // Reload patients after deletion
 };
 
-
-
+// Combined window.onload to fetch both users and patients
+window.onload = async () => {
+    await fetchUsers();
+    await fetchPatients();
+};
