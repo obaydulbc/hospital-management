@@ -62,3 +62,21 @@
 </div>
 
 <script src="js/script.js"></script>
+
+
+<script>
+// Check if the logged-in user is admin
+const checkAdminAccess = () => {
+    const user = JSON.parse(sessionStorage.getItem('loggedInUser'));
+    
+    // If no user or user is not admin, redirect to login page
+    if (!user || user.role !== 'admin') {
+        alert('You are not authorized to view this page.');
+        window.location.href = 'login.html'; // Redirect to login page
+    }
+};
+
+// Run check on page load
+window.onload = checkAdminAccess;
+</script>
+
