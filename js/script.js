@@ -40,10 +40,6 @@ const loginUser = async (e) => {
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', loginUser);
 
-
-
-
-
 // Fetch users and display in hospital_management.html or dashboard.html
 const fetchUsers = async () => {
     const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users');
@@ -157,4 +153,55 @@ const deletePatient = async (patientId) => {
 window.onload = async () => {
     await fetchUsers();
     await fetchPatients();
+};
+
+// Additional functionality: Handle adding new users and patients
+const handleAddUser = async () => {
+    const username = document.getElementById('newUsername').value;
+    const role = document.getElementById('newRole').value;
+    const hospitalID = document.getElementById('newHospitalID').value;
+
+    const newUser = {
+        username,
+        role,
+        hospitalID
+    };
+
+    const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users', {
+        method: 'POST',
+        body: JSON.stringify({ user: newUser }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const data = await response.json();
+    alert('User added successfully!');
+    fetchUsers(); // Refresh the users list
+};
+
+const handleAddPatient = async () => {
+    const patientID = document.getElementById('newPatientID').value;
+    const name = document.getElementById('newPatientName').value;
+    const age = document.getElementById('newPatientAge').value;
+    const roomType = document.getElementById('newRoomType').value;
+
+    const newPatient = {
+        patientID,
+        name,
+        age,
+        roomType
+    };
+
+    const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/patients', {
+        method: 'POST',
+        body: JSON.stringify({ patient: newPatient }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const data = await response.json();
+    alert('Patient added successfully!');
+    fetchPatients(); // Refresh the patients list
 };
