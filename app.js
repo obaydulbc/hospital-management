@@ -93,3 +93,56 @@ document.getElementById('addUserForm').addEventListener('submit', async function
 
 
 
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const path = require('path');
+
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Admin Dashboard Route
+app.get('/admin-dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
+});
+
+// Server
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+
+
+// Get all hospitals
+app.get('/api/hospitals', (req, res) => {
+    fs.readFile('./data/hospitals.json', 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to load hospitals' });
+        }
+        res.json(JSON.parse(data));
+    });
+});
+
+// Add a new hospital
+app.post('/api/hospitals', (req, res) => {
+    const newHospital = req.body;
+
+    fs.readFile('./data/hospitals.json', 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to load hospitals' });
+        }
+
+        const hospitals = JSON.parse(data);
+        hospitals.push(newHospital);
+
+        fs.writeFile('./data/hospitals.json', JSON.stringify(hospitals, null, 2), (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to save hospital' });
+            }
+            res.status(201).json({ message: 'Hospital added successfully' });
+        });
+    });
+});
+
+
+
