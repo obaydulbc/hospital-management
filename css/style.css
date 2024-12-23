@@ -1,32 +1,95 @@
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-}
-
-header {
-    background-color: #4CAF50;
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-nav {
-    text-align: center;
-    margin-top: 20px;
-}
-
-nav a {
-    margin: 0 15px;
-    text-decoration: none;
     color: #333;
 }
 
-table {
+h1, h2 {
+    color: #4CAF50;
+    text-align: center;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    padding: 10px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #45a049;
+}
+
+/* Forms */
+form {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input, form select, form button {
     width: 100%;
-    margin: 20px 0;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Tables */
+table {
+    width: 90%;
+    margin: 20px auto;
     border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 table th, table td {
@@ -35,6 +98,46 @@ table th, table td {
     border: 1px solid #ddd;
 }
 
+table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button.editBtn {
+    background-color: #007bff;
+}
+
+button.editBtn:hover {
+    background-color: #0056b3;
+}
+
+button.deleteBtn {
+    background-color: #f44336;
+}
+
+button.deleteBtn:hover {
+    background-color: #d32f2f;
+}
+
+/* Footer */
 footer {
     background-color: #4CAF50;
     color: white;
@@ -43,4 +146,55 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
+}
+
+/* Admin Dashboard */
+.admin-dashboard {
+    margin: 20px;
+}
+
+.admin-dashboard h2 {
+    margin-bottom: 20px;
+}
+
+.admin-dashboard table {
+    margin-bottom: 20px;
+}
+
+/* Login Page */
+.login-form {
+    width: 400px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-form label {
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    nav {
+        flex-direction: column;
+    }
+
+    .login-form {
+        width: 90%;
+    }
 }
