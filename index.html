@@ -10,7 +10,9 @@
     <div class="login-container">
         <h1>Hospital Management System</h1>
         <form id="loginForm">
-            <input type="text" id="hospitalName" placeholder="Hospital Name" required />
+            <select id="hospitalName" required>
+                <option value="" disabled selected>Select Hospital</option>
+            </select>
             <input type="text" id="username" placeholder="Username" required />
             <input type="password" id="password" placeholder="Password" required />
             <button type="submit">Log In</button>
