@@ -42,3 +42,26 @@ const VALUES = [
 ];
 
 writeToSpreadsheet(SPREADSHEET_ID, RANGE, VALUES);
+
+
+
+
+
+document.getElementById('add-hospital-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const hospitalName = event.target.hospitalName.value;
+
+    const response = await fetch('/api/hospitals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: hospitalName }),
+    });
+
+    const result = await response.json();
+    alert(result.message);
+
+    // Reset the form
+    event.target.reset();
+});
+
