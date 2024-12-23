@@ -1,18 +1,26 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    // Load hospitals into dropdown
     const hospitalSelect = document.getElementById('hospitalName');
+
     try {
-        const response = await fetch('data/hospitals.json');
+        // Fetch Hospitals Data
+        const response = await fetch('/data/hospitals.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch hospital data');
+        }
         const hospitals = await response.json();
+
+        // Populate Dropdown
         hospitals.forEach(hospital => {
             const option = document.createElement('option');
-            option.value = hospital.name;
+            option.value = hospital.name; // Assuming each hospital has a `name` field
             option.textContent = hospital.name;
             hospitalSelect.appendChild(option);
         });
     } catch (error) {
         console.error('Error loading hospitals:', error);
     }
+});
+
 
     // Add Login Form Event Listener
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
