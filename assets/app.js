@@ -211,3 +211,78 @@ app.post('/api/hospitals', (req, res) => {
     });
 });
 
+
+
+
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const hospitalSelect = document.getElementById('hospitalName');
+    const hospitalNameContainer = document.getElementById('hospital-name-container');
+
+    // Check if the user is admin and hide hospital name field
+    const role = localStorage.getItem('role');
+    if (role === 'admin') {
+        hospitalNameContainer.style.display = 'none'; // Hide the hospital name dropdown for admin
+    }
+
+    try {
+        // Fetch Hospitals Data for non-admin users
+        const response = await fetch('/data/hospitals.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch hospital data');
+        }
+        const hospitals = await response.json();
+
+        // Populate Dropdown for non-admin users
+        hospitals.forEach(hospital => {
+            const option = document.createElement('option');
+            option.value = hospital.name; // Assuming each hospital has a `name` field
+            option.textContent = hospital.name;
+            hospitalSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading hospitals:', error);
+    }
+
+    // Add Login Form Event Listener
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const hospitalName = hospitalSelect ? hospitalSelect.value.trim() : null; // Only get hospital name for non-admin
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const response = await fetch('data/users.json');
+            const users = await response.json();
+
+            const user = users.find(
+                user =>
+                    (user.hospitalName === hospitalName || user.role === 'admin') &&  // Allow admin to login without hospital name
+                    user.username === username &&
+                    user.password === password
+            );
+
+            if (user) {
+                alert('Login Successful!');
+                localStorage.setItem('hospitalName', hospitalName);
+                localStorage.setItem('username', username);
+                localStorage.setItem('role', user.role);
+
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'hospital-dashboard.html';
+                }
+            } else {
+                document.getElementById('error').textContent = 'Invalid login credentials.';
+                document.getElementById('error').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            document.getElementById('error').textContent = 'Something went wrong. Please try again.';
+            document.getElementById('error').style.display = 'block';
+        }
+    });
+});
+
