@@ -68,41 +68,95 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 
-document.getElementById('addUserForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const hospitalName = document.getElementById('hospitalName').value;
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const role = document.getElementById('role').value;
-
-    try {
-        // Fetch existing users
-        const response = await fetch('data/users.json');
-        const users = await response.json();
-
-        // Check if the username already exists in the same hospital
-        const userExists = users.some(user => user.hospitalName === hospitalName && user.username === username);
-        if (userExists) {
-            document.getElementById('userError').textContent = 'User already exists in this hospital!';
-            document.getElementById('userError').style.display = 'block';
-            return;
-        }
-
-        // Add new user
-        users.push({ hospitalName, username, password, role });
-
-        // Update users.json
-        await updateJSONFile('data/users.json', users);
-
-        document.getElementById('userSuccess').textContent = 'User added successfully!';
-        document.getElementById('userSuccess').style.display = 'block';
-        document.getElementById('userError').style.display = 'none';
-    } catch (error) {
-        console.error('Error adding user:', error);
-        document.getElementById('userError').textContent = 'Something went wrong.';
-        document.getElementById('userError').style.display = 'block';
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if the logged-in user is an admin
+    const role = localStorage.getItem('role');
+    if (role !== 'admin') {
+        alert('You do not have permission to access this page.');
+        window.location.href = 'login.html';  // Redirect to login page
     }
+
+    // Add Hospital
+    const hospitalForm = document.getElementById('add-hospital-form');
+    hospitalForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const hospitalName = hospitalForm.querySelector('[name="hospitalName"]').value;
+
+        try {
+            const response = await fetch('/api/hospitals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: hospitalName })
+            });
+
+            if (response.ok) {
+                document.getElementById('hospital-success').style.display = 'block';
+                document.getElementById('hospital-error').style.display = 'none';
+                hospitalForm.reset();
+            } else {
+                throw new Error('Failed to add hospital');
+            }
+        } catch (error) {
+            document.getElementById('hospital-error').style.display = 'block';
+        }
+    });
+
+    // Add User
+    const userForm = document.getElementById('add-user-form');
+    userForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = userForm.querySelector('[name="username"]').value;
+        const password = userForm.querySelector('[name="password"]').value;
+        const role = userForm.querySelector('[name="role"]').value;
+
+        try {
+            const response = await fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password, role })
+            });
+
+            if (response.ok) {
+                document.getElementById('user-success').style.display = 'block';
+                document.getElementById('user-error').style.display = 'none';
+                userForm.reset();
+            } else {
+                throw new Error('Failed to add user');
+            }
+        } catch (error) {
+            document.getElementById('user-error').style.display = 'block';
+        }
+    });
+
+    // View Users
+    const viewUsersButton = document.getElementById('view-users');
+    viewUsersButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/users');
+            const users = await response.json();
+
+            const userListDiv = document.getElementById('user-list');
+            userListDiv.innerHTML = '';  // Clear previous list
+
+            if (users.length > 0) {
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.textContent = `${user.username} - ${user.role}`;
+                    userListDiv.appendChild(userDiv);
+                });
+            } else {
+                userListDiv.textContent = 'No users found.';
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    });
 });
+
 
 
 
