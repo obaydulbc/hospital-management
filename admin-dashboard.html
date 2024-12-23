@@ -1,48 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-    <h1>Welcome to Admin Dashboard</h1>
+<!-- Admin Dashboard -->
+<h1>Admin Dashboard</h1>
 
-    <!-- Add Hospital Form -->
-    <section>
-        <h2>Add Hospital</h2>
-        <form id="add-hospital-form">
-            <input type="text" name="hospitalName" placeholder="Hospital Name" required>
-            <button type="submit">Add Hospital</button>
-        </form>
-        <p id="hospital-error" style="color: red; display: none;">Error adding hospital.</p>
-        <p id="hospital-success" style="color: green; display: none;">Hospital added successfully!</p>
-    </section>
+<div class="section">
+    <h2>Manage Users</h2>
+    <button onclick="showAddUserForm()">Add User</button>
+    <table id="usersTable">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Hospital ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-    <!-- Add User Form -->
-    <section>
-        <h2>Add User</h2>
-        <form id="add-user-form">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <select name="role" required>
-                <option value="admin">Admin</option>
-                <option value="hospital">Hospital User</option>
-            </select>
-            <button type="submit">Add User</button>
-        </form>
-        <p id="user-error" style="color: red; display: none;">Error adding user.</p>
-        <p id="user-success" style="color: green; display: none;">User added successfully!</p>
-    </section>
+<div class="section">
+    <h2>Manage Hospitals</h2>
+    <button onclick="showAddHospitalForm()">Add Hospital</button>
+    <table id="hospitalsTable">
+        <thead>
+            <tr>
+                <th>Hospital Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-    <!-- View Users -->
-    <section>
-        <h2>Manage Users</h2>
-        <button id="view-users">View Users</button>
-        <div id="user-list"></div>
-    </section>
+<!-- Add/Edit User Form Modal -->
+<div id="addUserModal">
+    <h3>Add New User</h3>
+    <label for="newUsername">Username</label>
+    <input type="text" id="newUsername">
+    
+    <label for="newUserRole">Role</label>
+    <select id="newUserRole">
+        <option value="admin">Admin</option>
+        <option value="doctor">Doctor</option>
+        <option value="nurse">Nurse</option>
+    </select>
 
-    <script src="assets/app.js"></script>
-</body>
-</html>
+    <label for="newUserHospitalID">Hospital ID</label>
+    <input type="text" id="newUserHospitalID">
+
+    <button onclick="addUser()">Save</button>
+    <button onclick="closeAddUserModal()">Cancel</button>
+</div>
+
+<!-- Add/Edit Hospital Form Modal -->
+<div id="addHospitalModal">
+    <h3>Add New Hospital</h3>
+    <label for="hospitalName">Hospital Name</label>
+    <input type="text" id="hospitalName">
+    
+    <button onclick="addHospital()">Save</button>
+    <button onclick="closeAddHospitalModal()">Cancel</button>
+</div>
+
+<script src="js/script.js"></script>
