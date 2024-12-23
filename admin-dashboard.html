@@ -180,6 +180,19 @@
             alert('Hospital deleted successfully!');
             fetchHospitals(); // Refresh hospital list after deletion
         };
+
+
+function showAddUserForm() {
+    document.getElementById('addUserModal').classList.add('show');
+    document.querySelector('.modal').classList.add('show');
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').classList.remove('show');
+    document.querySelector('.modal').classList.remove('show');
+}
+
+        
     </script>
 </body>
 </html>
