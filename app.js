@@ -1,52 +1,3 @@
-// Login Form Event Listener
-document.getElementById('loginForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); // ফর্ম সাবমিট বন্ধ করা
-
-    // Input Values
-    const hospitalName = document.getElementById('hospitalName').value.trim();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    try {
-        // Fetch Users Data from JSON
-        const response = await fetch('data/users.json');
-        const users = await response.json();
-
-        // Check if User Exists
-        const user = users.find(
-            user => user.hospitalName === hospitalName && user.username === username && user.password === password
-        );
-
-        if (user) {
-            // Login Successful
-            alert('Login Successful!');
-            localStorage.setItem('hospitalName', hospitalName); // Store Hospital Name for Dashboard
-            localStorage.setItem('username', username); // Store Username for Session
-            localStorage.setItem('role', user.role); // Store Role for Role-Based Dashboard
-
-            // Redirect Based on User Role
-            if (user.role === 'admin') {
-                window.location.href = 'admin-dashboard.html'; // Admin Dashboard
-            } else {
-                window.location.href = 'hospital-dashboard.html'; // Hospital User Dashboard
-            }
-        } else {
-            // Login Failed
-            document.getElementById('error').textContent = 'Invalid login credentials.';
-            document.getElementById('error').style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        document.getElementById('error').textContent = 'Something went wrong. Please try again later.';
-        document.getElementById('error').style.display = 'block';
-    }
-});
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', async function () {
     // Load hospitals into dropdown
     const hospitalSelect = document.getElementById('hospitalName');
@@ -62,7 +13,52 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         console.error('Error loading hospitals:', error);
     }
+
+    // Add Login Form Event Listener
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const hospitalName = hospitalSelect.value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const response = await fetch('data/users.json');
+            const users = await response.json();
+
+            const user = users.find(
+                user =>
+                    user.hospitalName === hospitalName &&
+                    user.username === username &&
+                    user.password === password
+            );
+
+            if (user) {
+                alert('Login Successful!');
+                localStorage.setItem('hospitalName', hospitalName);
+                localStorage.setItem('username', username);
+                localStorage.setItem('role', user.role);
+
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'hospital-dashboard.html';
+                }
+            } else {
+                document.getElementById('error').textContent = 'Invalid login credentials.';
+                document.getElementById('error').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            document.getElementById('error').textContent = 'Something went wrong. Please try again.';
+            document.getElementById('error').style.display = 'block';
+        }
+    });
 });
+
+
+
+
 
 document.getElementById('addUserForm').addEventListener('submit', async function (e) {
     e.preventDefault();
