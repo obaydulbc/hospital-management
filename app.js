@@ -33,3 +33,63 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         document.getElementById('error').style.display = 'block';
     }
 });
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', async function () {
+    // Load hospitals into dropdown
+    const hospitalSelect = document.getElementById('hospitalName');
+    try {
+        const response = await fetch('data/hospitals.json');
+        const hospitals = await response.json();
+        hospitals.forEach(hospital => {
+            const option = document.createElement('option');
+            option.value = hospital.name;
+            option.textContent = hospital.name;
+            hospitalSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading hospitals:', error);
+    }
+});
+
+document.getElementById('addUserForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const hospitalName = document.getElementById('hospitalName').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const role = document.getElementById('role').value;
+
+    try {
+        // Fetch existing users
+        const response = await fetch('data/users.json');
+        const users = await response.json();
+
+        // Check if the username already exists in the same hospital
+        const userExists = users.some(user => user.hospitalName === hospitalName && user.username === username);
+        if (userExists) {
+            document.getElementById('userError').textContent = 'User already exists in this hospital!';
+            document.getElementById('userError').style.display = 'block';
+            return;
+        }
+
+        // Add new user
+        users.push({ hospitalName, username, password, role });
+
+        // Update users.json
+        await updateJSONFile('data/users.json', users);
+
+        document.getElementById('userSuccess').textContent = 'User added successfully!';
+        document.getElementById('userSuccess').style.display = 'block';
+        document.getElementById('userError').style.display = 'none';
+    } catch (error) {
+        console.error('Error adding user:', error);
+        document.getElementById('userError').textContent = 'Something went wrong.';
+        document.getElementById('userError').style.display = 'block';
+    }
+});
+
+
+
