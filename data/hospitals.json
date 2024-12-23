@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Modern Hospital",
+    "location": "Dhaka"
+  },
+  {
+    "id": 2,
+    "name": "City Hospital",
+    "location": "Chittagong"
+  }
+]
