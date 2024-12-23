@@ -1,3 +1,39 @@
+// Login functionality
+const loginUser = async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // You can use a mock validation for this example or call the API to validate user credentials
+    const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users');
+    const data = await response.json();
+
+    // Find user by username and password
+    const user = data.users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        // If user found, store session data and redirect
+        sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+        
+        // Redirect based on role
+        if (user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html'; // Redirect to admin dashboard if admin
+        } else {
+            alert('You are not authorized to access the admin dashboard.');
+        }
+    } else {
+        alert('Invalid username or password');
+    }
+};
+
+// Handle login form submission
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', loginUser);
+
+
+
+
 // Fetch users and display in hospital_management.html or dashboard.html
 const fetchUsers = async () => {
     const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users');
