@@ -1,2 +1,1 @@
-# hospital-management
-Hospital management apps by SKOR
+mv README.md Documentation.md
