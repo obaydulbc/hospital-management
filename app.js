@@ -21,7 +21,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             // Login Successful
             alert('Login Successful!');
             localStorage.setItem('hospitalName', hospitalName); // Store Hospital Name for Dashboard
-            window.location.href = 'dashboard.html'; // Redirect to Dashboard
+            localStorage.setItem('username', username); // Store Username for Session
+            localStorage.setItem('role', user.role); // Store Role for Role-Based Dashboard
+
+            // Redirect Based on User Role
+            if (user.role === 'admin') {
+                window.location.href = 'admin-dashboard.html'; // Admin Dashboard
+            } else {
+                window.location.href = 'hospital-dashboard.html'; // Hospital User Dashboard
+            }
         } else {
             // Login Failed
             document.getElementById('error').textContent = 'Invalid login credentials.';
@@ -33,6 +41,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         document.getElementById('error').style.display = 'block';
     }
 });
+
 
 
 
