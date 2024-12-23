@@ -205,3 +205,112 @@ const handleAddPatient = async () => {
     alert('Patient added successfully!');
     fetchPatients(); // Refresh the patients list
 };
+
+
+// Function to fetch hospitals and display them
+const fetchHospitals = async () => {
+    try {
+        // Fetch data from the Sheety API
+        const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/hospitals');
+        const data = await response.json();
+
+        // Select the table body where hospitals will be listed
+        const hospitalsTable = document.querySelector('#hospitalsTable tbody');
+        hospitalsTable.innerHTML = ''; // Clear existing rows in the table
+
+        // Check if the hospitals array exists and is not empty
+        if (data.hospitals && Array.isArray(data.hospitals)) {
+            // Loop through each hospital and create a table row for it
+            data.hospitals.forEach(hospital => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${hospital.name}</td>
+                    <td>
+                        <button class="editBtn" onclick="editHospital(${hospital.id})">Edit</button>
+                        <button class="deleteBtn" onclick="deleteHospital(${hospital.id})">Delete</button>
+                    </td>
+                `;
+                hospitalsTable.appendChild(row);
+            });
+        } else {
+            console.log("No hospitals found.");
+        }
+    } catch (error) {
+        console.error('Error fetching hospitals:', error);
+        alert('Failed to load hospitals. Please try again later.');
+    }
+};
+
+// Function to show the form for adding a new hospital
+const showAddHospitalForm = () => {
+    document.getElementById('addHospitalForm').style.display = 'block';
+};
+
+// Function to hide the form for adding a new hospital
+const hideAddHospitalForm = () => {
+    document.getElementById('addHospitalForm').style.display = 'none';
+};
+
+// Function to add a new hospital
+const addHospital = async () => {
+    const hospitalName = document.getElementById('hospitalName').value;
+
+    if (!hospitalName) {
+        alert("Please enter a hospital name.");
+        return;
+    }
+
+    const newHospital = {
+        name: hospitalName
+    };
+
+    try {
+        // Send the new hospital data to the Sheety API using the POST method
+        const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/hospitals', {
+            method: 'POST',
+            body: JSON.stringify({
+                hospital: newHospital
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+        alert('Hospital added successfully!');
+        hideAddHospitalForm();
+        fetchHospitals(); // Refresh the hospital list after adding
+    } catch (error) {
+        console.error('Error adding hospital:', error);
+        alert('An error occurred while adding the hospital.');
+    }
+};
+
+// Function to edit a hospital (example function)
+const editHospital = (hospitalId) => {
+    alert(`Editing hospital with ID: ${hospitalId}`);
+};
+
+// Function to delete a hospital
+const deleteHospital = async (hospitalId) => {
+    try {
+        // Send the delete request to Sheety API using DELETE method
+        const response = await fetch(`https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/hospitals/${hospitalId}`, {
+            method: 'DELETE',
+        });
+
+        const data = await response.json();
+        alert('Hospital deleted successfully!');
+        fetchHospitals(); // Refresh the hospital list after deletion
+    } catch (error) {
+        console.error('Error deleting hospital:', error);
+        alert('An error occurred while deleting the hospital.');
+    }
+};
+
+// Call fetchHospitals when the page loads to show the existing hospitals
+window.onload = async () => {
+    await fetchHospitals();
+};
+
+
