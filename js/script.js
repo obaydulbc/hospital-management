@@ -1,35 +1,45 @@
 // Login functionality
 const loginUser = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // You can use a mock validation for this example or call the API to validate user credentials
-    const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users');
-    const data = await response.json();
+    try {
+        const response = await fetch('https://api.sheety.co/a1fb732c37f9b3a9db1c885ad5ff8c0d/hospitalManagementSystem/users');
+        const data = await response.json();
 
-    // Find user by username and password
-    const user = data.users.find(u => u.username === username && u.password === password);
+        // Check if response contains the 'users' field
+        if (data.users && Array.isArray(data.users)) {
+            // Find user by username and password
+            const user = data.users.find(u => u.username === username && u.password === password);
 
-    if (user) {
-        // If user found, store session data and redirect
-        sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-        
-        // Redirect based on role
-        if (user.role === 'admin') {
-            window.location.href = 'admin-dashboard.html'; // Redirect to admin dashboard if admin
+            if (user) {
+                // If user found, store session data and redirect
+                sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+                
+                // Redirect based on role
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html'; // Redirect to admin dashboard if admin
+                } else {
+                    window.location.href = 'dashboard.html'; // Redirect to user dashboard if not admin
+                }
+            } else {
+                alert('Invalid username or password');
+            }
         } else {
-            alert('You are not authorized to access the admin dashboard.');
+            alert('Error: Invalid response from API.');
         }
-    } else {
-        alert('Invalid username or password');
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('An error occurred while logging in. Please try again later.');
     }
 };
 
 // Handle login form submission
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', loginUser);
+
 
 
 
